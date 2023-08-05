@@ -1,8 +1,8 @@
 package com.example.mvppractice.di
 
 import android.content.Context
-import com.example.mvppractice.model.api.NewsApi
-import com.example.mvppractice.utils.Constants.BASE_URL
+import com.example.mvppractice.common.utils.Constants.BASE_URL
+import com.example.mvppractice.service.api.NewsApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -1,8 +1,7 @@
-package com.example.mvppractice
+package com.example.mvppractice.view
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
-
 
 @HiltAndroidApp
 class NewsApplication: Application() {
