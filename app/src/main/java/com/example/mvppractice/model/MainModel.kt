@@ -23,8 +23,6 @@ class MainModel(
         } catch (e: Exception) {
             onFinishListener.error(e.message.toString())
         }
-
-
     }
 
 }

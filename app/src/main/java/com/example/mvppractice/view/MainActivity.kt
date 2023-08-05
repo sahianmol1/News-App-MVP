@@ -2,13 +2,18 @@ package com.example.mvppractice.view
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.mvppractice.R
 import com.example.mvppractice.contracts.MainActivityContract
 import com.example.mvppractice.model.MainModel
 import com.example.mvppractice.presenter.MainPresenter
 import com.example.mvppractice.service.api.NewsApi
+import com.example.mvppractice.view.adapter.TopHeadlinesAdapter
 import com.example.mvppractice.view.models.TopHeadlinesUiModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -26,6 +31,9 @@ class MainActivity : AppCompatActivity(), MainActivityContract.View {
     lateinit var api: NewsApi
     private lateinit var model: MainModel
     private lateinit var presenter: MainPresenter
+    private lateinit var mRecyclerView: RecyclerView
+    private lateinit var loadingIndicator: ProgressBar
+    private lateinit var adapter: TopHeadlinesAdapter
 
     private val job = SupervisorJob()
     private val mainScope = CoroutineScope(job + Dispatchers.IO)
@@ -33,6 +41,13 @@ class MainActivity : AppCompatActivity(), MainActivityContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        mRecyclerView = findViewById(R.id.rv_top_headlines)
+        loadingIndicator = findViewById(R.id.loading_bar)
+        adapter = TopHeadlinesAdapter()
+
+        mRecyclerView.layoutManager = LinearLayoutManager(this)
+        mRecyclerView.adapter = adapter
 
         model = MainModel(api)
         presenter = MainPresenter(model = model, view = this)
@@ -59,17 +74,24 @@ class MainActivity : AppCompatActivity(), MainActivityContract.View {
 
     override fun onLoading() {
         Log.i("MainActivity", "OnLoading: List is loading")
+        loadingIndicator.visibility = View.VISIBLE
+        mRecyclerView.visibility = View.GONE
     }
 
     override fun onTopHeadlinesFetched(list: List<TopHeadlinesUiModel>) {
         mainScope.launch(Dispatchers.Main.immediate) {
-            Toast.makeText(this@MainActivity, "List Size: ${list.size}", Toast.LENGTH_LONG).show()
+            adapter.submitList(list)
+            loadingIndicator.visibility = View.GONE
+            mRecyclerView.visibility = View.VISIBLE
         }
     }
 
     override fun onError(message: String) {
         mainScope.launch(Dispatchers.Main.immediate) {
             Toast.makeText(this@MainActivity, "Error: $message", Toast.LENGTH_LONG).show()
+
+            loadingIndicator.visibility = View.GONE
+            mRecyclerView.visibility = View.GONE
         }
     }
 }
