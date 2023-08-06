@@ -22,7 +22,13 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.io.Reader
+import java.io.StringWriter
+import java.io.Writer
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), MainActivityContract.View {
@@ -65,6 +71,26 @@ class MainActivity : AppCompatActivity(), MainActivityContract.View {
                 }
             }
         }
+
+        getCountriesData()
+    }
+
+    private fun getCountriesData() {
+        val inputStream = resources.openRawResource(R.raw.countries)
+        val writer: Writer = StringWriter()
+        val buffer = CharArray(1024)
+        inputStream.use {
+            val reader: Reader = BufferedReader(InputStreamReader(inputStream, "UTF-8"))
+            var n: Int
+            while (reader.read(buffer).also { n = it } != -1) {
+                writer.write(buffer, 0, n)
+            }
+        }
+
+        val jsonString: String = writer.toString()
+
+
+        Log.i("getCountries Tag", "Countries from json: $jsonString")
     }
 
     override fun onDestroy() {
