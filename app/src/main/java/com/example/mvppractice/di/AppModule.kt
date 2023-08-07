@@ -28,4 +28,11 @@ object AppModule {
     @Singleton
     fun providesNewsApi(retrofit: Retrofit): NewsApi =
         retrofit.create(NewsApi::class.java)
+
+    // Check why dagger is not able to provide this dependency
+//    @Provides
+//    @Singleton
+//    fun providesCountriesJson(@ApplicationContext context: Context): InputStream {
+//        return context.resources.openRawResource(R.raw.countries)
+//    }
 }

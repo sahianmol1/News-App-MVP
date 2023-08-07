@@ -61,6 +61,9 @@ dependencies {
     // coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
 
+    // lifecycle scope
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
+
     // glide
     implementation 'com.github.bumptech.glide:glide:4.15.1'
 }

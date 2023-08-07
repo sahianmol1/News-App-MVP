@@ -1,11 +1,13 @@
 package com.example.mvppractice.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mvppractice.R
@@ -15,6 +17,7 @@ import com.example.mvppractice.presenter.MainPresenter
 import com.example.mvppractice.service.api.NewsApi
 import com.example.mvppractice.view.adapter.TopHeadlinesAdapter
 import com.example.mvppractice.view.models.TopHeadlinesUiModel
+import com.example.mvppractice.view.selectcountry.SelectCountryActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,15 +34,17 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), MainActivityContract.View {
+class MainActivity : FragmentActivity(), MainActivityContract.View {
 
     @Inject
     lateinit var api: NewsApi
     private lateinit var model: MainModel
     private lateinit var presenter: MainPresenter
+    private lateinit var adapter: TopHeadlinesAdapter
+
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var loadingIndicator: ProgressBar
-    private lateinit var adapter: TopHeadlinesAdapter
+    private lateinit var clSelectCountry: ConstraintLayout
 
     private val job = SupervisorJob()
     private val mainScope = CoroutineScope(job + Dispatchers.IO)
@@ -50,6 +55,8 @@ class MainActivity : AppCompatActivity(), MainActivityContract.View {
 
         mRecyclerView = findViewById(R.id.rv_top_headlines)
         loadingIndicator = findViewById(R.id.loading_bar)
+        clSelectCountry = findViewById(R.id.cl_select_country)
+
         adapter = TopHeadlinesAdapter()
 
         mRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -70,6 +77,14 @@ class MainActivity : AppCompatActivity(), MainActivityContract.View {
                     ).show()
                 }
             }
+        }
+
+        clSelectCountry.setOnClickListener {
+            val intent = Intent(this, SelectCountryActivity::class.java)
+            startActivity(intent)
+//            val fragmentTransaction = supportFragmentManager.beginTransaction()
+//            fragmentTransaction.replace(R.id.main_container, SelectCountryFragment())
+//            fragmentTransaction.commit()
         }
 
         getCountriesData()

@@ -16,6 +16,9 @@
         android:theme="@style/Theme.MVPPractice"
         tools:targetApi="31">
         <activity
+            android:name=".view.selectcountry.SelectCountryActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.MainActivity"
             android:exported="true">
             <intent-filter>
