@@ -12,7 +12,7 @@ class MainModel(
     ) {
         onFinishListener.loading()
         try {
-            val response = api.getTopHeadlines()
+            val response = api.getTopHeadlines(country = country)
             if (response.isSuccessful) {
                 response.body()?.let {
                     onFinishListener.success(it)
