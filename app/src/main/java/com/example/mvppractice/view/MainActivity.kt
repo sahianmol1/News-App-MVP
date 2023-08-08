@@ -109,7 +109,6 @@ class MainActivity : FragmentActivity(), MainActivityContract.View {
 
     override fun onTopHeadlinesFetched(list: List<TopHeadlinesUiModel>) {
         lifecycleScope.launch {
-            adapter.submitList(emptyList())
             adapter.submitList(list)
             loadingIndicator.visibility = View.GONE
             mRecyclerView.visibility = View.VISIBLE

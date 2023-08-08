@@ -11,6 +11,7 @@
         android:id="@+id/tv_country"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
         tools:text="India"
         android:textSize="20sp"
         android:padding="16dp"
