@@ -45,18 +45,12 @@
                 android:textSize="20sp"
                 android:gravity="center"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/iv_country_chev"/>
-
-            <ImageView
-                android:id="@+id/iv_country_chev"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:contentDescription="@string/select_country"
-                android:src="@drawable/baseline_chevron_right_24"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:drawableEndCompat="@drawable/baseline_chevron_right_24"
+                app:drawableTint="@color/black" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

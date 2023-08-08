@@ -2,10 +2,12 @@ package com.example.mvppractice.view.selectcountry
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,7 +21,7 @@ import com.example.mvppractice.view.models.CountriesUIModel
 import kotlinx.coroutines.launch
 import java.io.InputStream
 
-class SelectCountryActivity : AppCompatActivity(), SelectCountryContract.View {
+class SelectCountryActivity : AppCompatActivity(), SelectCountryContract.View, SearchView.OnQueryTextListener {
 
     private lateinit var toolbar: Toolbar
     private lateinit var recyclerView: RecyclerView
@@ -30,6 +32,7 @@ class SelectCountryActivity : AppCompatActivity(), SelectCountryContract.View {
     private lateinit var model: SelectCountryModel
     private lateinit var presenter: SelectCountryPresenter
 
+    private var countriesList: List<CountriesUIModel> = emptyList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_select_country)
@@ -75,6 +78,8 @@ class SelectCountryActivity : AppCompatActivity(), SelectCountryContract.View {
         toolbar.setNavigationOnClickListener {
             onBackPressed()
         }
+
+        toolbar.inflateMenu(R.menu.menu_toolbar)
     }
 
     override fun onLoading() {
@@ -83,11 +88,46 @@ class SelectCountryActivity : AppCompatActivity(), SelectCountryContract.View {
 
     override fun onCountriesListFetched(list: List<CountriesUIModel>) {
         progressBar.visibility = View.GONE
-        adapter.submitList(list)
+        countriesList = list
+        adapter.submitList(countriesList)
     }
 
     override fun onError(message: String) {
         progressBar.visibility = View.GONE
         Toast.makeText(this, "Error: $message", Toast.LENGTH_LONG).show()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_toolbar, menu)
+
+        val search = menu?.findItem(R.id.action_search)
+        val searchView = search?.actionView as? SearchView
+
+        searchView?.isSubmitButtonEnabled = true
+        searchView?.setOnQueryTextListener(this)
+
+        return true
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        if (query != null) {
+            val filteredCountries = countriesList.filter {
+                it.countryName.contains(query, true) || it.countryCode.contains(query, true)
+            }
+
+            adapter.submitList(filteredCountries)
+        }
+        return true
+    }
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+        if (newText != null) {
+            val filteredCountries = countriesList.filter {
+                it.countryName.contains(newText, true) || it.countryCode.contains(newText, true)
+            }
+
+            adapter.submitList(filteredCountries)
+        }
+        return true
     }
 }
