@@ -48,7 +48,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:drawableEndCompat="@drawable/baseline_chevron_right_24"
+                android:drawableEnd="@drawable/ic_chevron"
                 app:drawableTint="@color/black" />
 
 
