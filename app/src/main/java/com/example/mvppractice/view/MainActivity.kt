@@ -2,6 +2,7 @@ package com.example.mvppractice.view
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -57,7 +58,13 @@ class MainActivity : FragmentActivity(), MainActivityContract.View {
 
         tvCountryName.text = INITIAL_COUNTRY
 
-        adapter = TopHeadlinesAdapter()
+        adapter = TopHeadlinesAdapter(
+            onArticleClicked = { url ->
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.data = Uri.parse(url)
+                startActivity(intent)
+            }
+        )
 
         mRecyclerView.layoutManager = LinearLayoutManager(this)
         mRecyclerView.adapter = adapter
