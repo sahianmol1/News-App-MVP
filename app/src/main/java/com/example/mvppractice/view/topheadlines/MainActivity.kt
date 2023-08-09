@@ -1,4 +1,4 @@
-package com.example.mvppractice.view
+package com.example.mvppractice.view.topheadlines
 
 import android.app.Activity
 import android.content.Intent

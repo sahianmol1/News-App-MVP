@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,7 +22,8 @@ import com.example.mvppractice.view.models.CountriesUIModel
 import kotlinx.coroutines.launch
 import java.io.InputStream
 
-class SelectCountryActivity : AppCompatActivity(), SelectCountryContract.View, SearchView.OnQueryTextListener {
+class SelectCountryActivity : AppCompatActivity(), SelectCountryContract.View,
+    SearchView.OnQueryTextListener {
 
     private lateinit var toolbar: Toolbar
     private lateinit var recyclerView: RecyclerView
@@ -73,13 +75,17 @@ class SelectCountryActivity : AppCompatActivity(), SelectCountryContract.View, S
 
     private fun setUpActionBar(toolbar: Toolbar) {
         setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.toolbar_text_color))
+        toolbar.navigationIcon = ContextCompat.getDrawable(this, R.drawable.ic_back)
+        
         supportActionBar?.title = getString(R.string.select_a_country)
         toolbar.setNavigationOnClickListener {
             onBackPressed()
         }
 
         toolbar.inflateMenu(R.menu.menu_toolbar)
+
     }
 
     override fun onLoading() {
