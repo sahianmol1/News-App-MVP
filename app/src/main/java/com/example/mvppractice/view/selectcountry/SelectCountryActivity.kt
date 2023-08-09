@@ -3,13 +3,12 @@ package com.example.mvppractice.view.selectcountry
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,7 +24,7 @@ import java.io.InputStream
 class SelectCountryActivity : AppCompatActivity(), SelectCountryContract.View,
     SearchView.OnQueryTextListener {
 
-    private lateinit var toolbar: Toolbar
+//    private lateinit var toolbar: Toolbar
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CountriesAdapter
     private lateinit var progressBar: ProgressBar
@@ -39,7 +38,7 @@ class SelectCountryActivity : AppCompatActivity(), SelectCountryContract.View,
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_select_country)
 
-        toolbar = findViewById(R.id.toolbar)
+//        toolbar = findViewById(R.id.toolbar)
         recyclerView = findViewById(R.id.rv_countries)
         progressBar = findViewById(R.id.progress_bar)
 
@@ -70,22 +69,12 @@ class SelectCountryActivity : AppCompatActivity(), SelectCountryContract.View,
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 
-        setUpActionBar(toolbar)
+        setUpActionBar()
     }
 
-    private fun setUpActionBar(toolbar: Toolbar) {
-        setSupportActionBar(toolbar)
-
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.toolbar_text_color))
-        toolbar.navigationIcon = ContextCompat.getDrawable(this, R.drawable.ic_back)
-        
+    private fun setUpActionBar() {
         supportActionBar?.title = getString(R.string.select_a_country)
-        toolbar.setNavigationOnClickListener {
-            onBackPressed()
-        }
-
-        toolbar.inflateMenu(R.menu.menu_toolbar)
-
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onLoading() {
@@ -112,6 +101,14 @@ class SelectCountryActivity : AppCompatActivity(), SelectCountryContract.View,
         searchView?.isSubmitButtonEnabled = true
         searchView?.setOnQueryTextListener(this)
 
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+        if (id == android.R.id.home) {
+            onBackPressed()
+        }
         return true
     }
 

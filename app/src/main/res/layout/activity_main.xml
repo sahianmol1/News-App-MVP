@@ -6,56 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".view.topheadlines.MainActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/tv_headlines"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/top_headlines"
-            android:textColor="?android:attr/textColorPrimaryInverse"
-            android:textSize="24sp" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_select_country"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="end"
-            android:paddingHorizontal="16dp"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:layout_marginHorizontal="16dp">
-
-            <TextView
-                android:id="@+id/tv_country_name"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                tools:text="India"
-                android:textAllCaps="true"
-                android:textSize="20sp"
-                android:gravity="center"
-                android:textColor="?android:attr/textColorPrimaryInverse"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:drawableEnd="@drawable/ic_chevron"
-                app:drawableTint="@color/black" />
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    </androidx.appcompat.widget.Toolbar>
-
     <ProgressBar
         android:id="@+id/loading_bar"
         android:layout_width="wrap_content"

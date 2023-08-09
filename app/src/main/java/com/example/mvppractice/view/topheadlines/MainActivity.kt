@@ -1,18 +1,20 @@
 package com.example.mvppractice.view.topheadlines
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.FragmentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,18 +36,17 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class MainActivity : FragmentActivity(), MainActivityContract.View {
+class MainActivity : AppCompatActivity(), MainActivityContract.View {
 
     @Inject
     lateinit var api: NewsApi
     private lateinit var model: MainModel
     private lateinit var presenter: MainPresenter
     private lateinit var adapter: TopHeadlinesAdapter
+    private lateinit var resultLauncher: ActivityResultLauncher<Intent>
 
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var loadingIndicator: ProgressBar
-    private lateinit var clSelectCountry: ConstraintLayout
-    private lateinit var tvCountryName: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,10 +54,8 @@ class MainActivity : FragmentActivity(), MainActivityContract.View {
 
         mRecyclerView = findViewById(R.id.rv_top_headlines)
         loadingIndicator = findViewById(R.id.loading_bar)
-        clSelectCountry = findViewById(R.id.cl_select_country)
-        tvCountryName = findViewById(R.id.tv_country_name)
 
-        tvCountryName.text = INITIAL_COUNTRY
+        setupToolbar()
 
         adapter = TopHeadlinesAdapter(
             onArticleClicked = { url ->
@@ -86,26 +85,38 @@ class MainActivity : FragmentActivity(), MainActivityContract.View {
             }
         }
 
-        val resultLauncher =
+        resultLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
                 if (result.resultCode == Activity.RESULT_OK) {
                     val intent = result.data
                     val countryCode = intent?.getStringExtra(Constants.COUNTRY_CODE)
                     countryCode?.let {
-                        tvCountryName.text = INITIAL_COUNTRY
                         lifecycleScope.launch {
                             adapter.submitList(emptyList())
                             presenter.getTopHeadlines(it)
                         }
-                        tvCountryName.text = it
+                        supportActionBar?.title = getString(R.string.top_headlines, it)
                     }
                 }
             }
+    }
 
-        clSelectCountry.setOnClickListener {
+    private fun setupToolbar() {
+        supportActionBar?.title = getString(R.string.top_headlines, INITIAL_COUNTRY)
+    }
+
+    @SuppressLint("RestrictedApi")
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main_toolbar, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_select_a_country) {
             val intent = Intent(this, SelectCountryActivity::class.java)
             resultLauncher.launch(intent)
         }
+        return true
     }
 
     override fun onLoading() {
